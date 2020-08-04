@@ -38,4 +38,4 @@ router.post('/register', async ctx => {
     message: '注册成功'
   }
 })
-module.exports = router
+module.exports = router.routes()
