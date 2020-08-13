@@ -26,6 +26,7 @@ class Blockchain {
     const newBlock = this.generateNewBlock()
     if (this.isValidBlock(newBlock) && this.isValidChain(this.blockchain)) {
       this.blockchain.push(newBlock)
+      return newBlock
     } else {
       console.log('Error,Invalid Block', newBlock)
     }
@@ -91,12 +92,13 @@ class Blockchain {
     return true
   }
 }
-const bc = new Blockchain()
-bc.mine()
+// const bc = new Blockchain()
+// bc.mine()
 // 篡改值
 // bc.blockchain[1].nonce = 22
-bc.mine()
-bc.mine()
-bc.mine()
-bc.mine()
-console.log(bc.blockchain)
+// bc.mine()
+// bc.mine()
+// bc.mine()
+// bc.mine()
+// console.log(bc.blockchain)
+module.exports = Blockchain

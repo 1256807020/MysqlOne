@@ -51,6 +51,9 @@
     "koa-views": "^6.2.1",
     "koa2-restful": "^0.1.0",
     "lodash": "^4.17.15",
+    "md5": "^2.2.1",
+    "md5-node": "^1.0.1",
+    "moment": "^2.24.0",
     "mongodb": "^3.5.7",
     "mysql": "^2.18.1",
     "mysql2": "^2.1.0",
@@ -60,9 +63,7 @@
     "require-directory": "^2.1.1",
     "sequelize": "^5.21.8",
     "validator": "^11.1.0",
-    "md5": "^2.2.1",
-    "md5-node": "^1.0.1",
-    "moment": "^2.24.0"
+    "vorpal": "^1.12.0"
   },
   "devDependencies": {
     "eslint": "^6.7.2",
