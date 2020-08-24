@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon app.js",
     "start": "node app.js",
-    "lint": "eslint --fix --ext .js"
+    "lint": "eslint --fix --ext .js",
+    "chain": "node src/vorpal.js"
   },
   "keywords": [],
   "author": "",

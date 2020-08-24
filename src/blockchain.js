@@ -21,11 +21,28 @@ class Blockchain {
     return this.blockchain[this.blockchain.length - 1]
   }
 
-  // 挖矿
-  mine() {
+  transfer(from, to, amount) {
+    // 签名校验(后面补充)
+    const transObj = { from, to, amount }
+    this.data.push(transObj)
+    return transObj
+  }
+
+  // 查看余额
+  blance() {
+
+  }
+
+  // 挖矿 就是打包交易
+  mine(address) {
+    // 生成新的区块，一页的记账加入新的区块
+    // 不停的计算hash
+    // 挖矿结束，矿工奖励100
+    this.transfer('0', address, 100)
     const newBlock = this.generateNewBlock()
     if (this.isValidBlock(newBlock) && this.isValidChain(this.blockchain)) {
       this.blockchain.push(newBlock)
+      this.data = []
       return newBlock
     } else {
       console.log('Error,Invalid Block', newBlock)
