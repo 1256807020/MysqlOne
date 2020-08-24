@@ -23,14 +23,39 @@ class Blockchain {
 
   transfer(from, to, amount) {
     // 签名校验(后面补充)
+    if (from !== '0') {
+      // 交易非挖矿
+      const blance = this.blance(from)
+      if (blance < amount) {
+        console.log('not enough blance', from, blance, amount)
+        return
+      }
+    }
     const transObj = { from, to, amount }
     this.data.push(transObj)
     return transObj
   }
 
   // 查看余额
-  blance() {
-
+  blance(address) {
+    let blance = 0
+    this.blockchain.forEach(block => {
+      if (!Array.isArray(block.data)) {
+        // 创世区块链
+        return
+      }
+      block.data.forEach(trans => {
+        console.log('address', address, trans.from, trans.to)
+        if (address === trans.from) {
+          blance -= trans.amount
+        }
+        if (address === trans.to) {
+          blance += trans.amount
+        }
+      })
+    })
+    console.log(blance)
+    return blance
   }
 
   // 挖矿 就是打包交易
