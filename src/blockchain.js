@@ -1,4 +1,5 @@
 const crypto = require('crypto')
+const dgram = require('dgram')
 // 创世区块链
 const initBlock = {
   index: 0,
@@ -15,6 +16,71 @@ class Blockchain {
     this.difficult = 4
     const hash = this.computeHash(0, '0', 1597326496798, 'blockchain', 1)
     console.log('创世Hash', hash)
+    // 所有的网络节点信息，address port
+    this.peers = []
+    // 种子节点
+    this.seed = { port: 8001, address: 'localhost' }
+    this.udp = dgram.createSocket('udp4')
+    this.init()
+  }
+
+  init() {
+    this.bindP2p()
+    this.bindExit()
+  }
+
+  bindP2p() {
+    this.udp.on('message', (data, remote) => {
+      const { address, port } = remote
+      const action = JSON.parse(data)
+      // {
+      //   type:'',
+      //   data:'具体信息'
+      // }
+      if (action.type) {
+        this.dispatch(action, { address, port })
+      }
+    })
+    this.udp.on('listening', () => {
+      const address = this.udp.address()
+      console.log('[信息]：udp监听完毕，端口是：' + address.port)
+    })
+    // 区分种子节点和普通节点，普通节点0即可，任意空闲节点
+    // 种子节点必须是预定
+    console.log(process.argv)
+    const port = Number(process.argv[2]) || 0
+    this.startNode(port)
+  }
+
+  bindExit() {
+    process.on('exit', () => {
+      console.log('【信息】:网络一线牵，珍惜这段缘，再见！')
+    })
+  }
+
+  startNode(port) {
+    this.udp.bind(port)
+    // 如果不是种子节点，需要发送一个消息给种子
+    if (port !== 8001) {
+      this.send({
+        type: 'newpeer'
+      }, this.seed.port, this.seed.address)
+    }
+  }
+
+  send(message, port, address) {
+    this.udp.send(JSON.stringify(message), port, address)
+  }
+
+  dispatch(action, remote) {
+    // 接收到网络消息在这里处理，判断是
+    switch (action.type) {
+      case 'newpeer':
+        console.log('你好啊，新朋友', remote)
+        break
+      default:
+        console.log('这个action不认识')
+    }
   }
 
   getLastBlock() {
