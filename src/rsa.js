@@ -43,10 +43,11 @@ function verify({ from, to, amount, signature }, pub) {
   const bufferMsg = Buffer.from(`${from}-${to}-${amount}`)
   return keypairTemp.verify(bufferMsg, signature)
 }
-const trans = { from: 'woniu', to: 'imooc', amount: 100 }
+// const trans = { from: 'woniu', to: 'imooc', amount: 100 }
 // const trans1 = { from: 'woniu', to: 'imooc', amount:100}
-const signature = sign(trans)
-trans.signature = signature
-console.log(signature)
-const isVerify = verify(trans, keys.pub)
-console.log(isVerify)
+// const signature = sign(trans)
+// trans.signature = signature
+// console.log(signature)
+// const isVerify = verify(trans, keys.pub)
+// console.log(isVerify)
+module.exports = { sign, verify, keys }
