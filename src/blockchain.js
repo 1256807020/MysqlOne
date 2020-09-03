@@ -22,6 +22,8 @@ class Blockchain {
     this.remote = {}
     this.newPeers = []
     this.remotePeer = {}
+    this.allData = {}
+    this.newChain = []
     // 种子节点
     this.seed = { port: 8001, address: 'localhost' }
     this.udp = dgram.createSocket('udp4')
@@ -109,8 +111,23 @@ class Blockchain {
           data: remote
         })
         // 4.告诉你现在区块链的数据
+        // 一定记得加地址和端口
+        this.send({
+          type: 'blockchain',
+          data: JSON.stringify({
+            blockchain: this.blockchain,
+            // trans: this.data
+          })
+        }, remote.port, remote.address)
         this.peers.push(remote)
         console.log('你好啊，新朋友', remote)
+        break
+      case 'blockchain':
+        // 同步本地链
+        this.allData = JSON.parse(action.data)
+        this.newChain = this.allData.blockchain
+        console.log(this.allData)
+        this.replaceChain(this.newChain)
         break
       case 'remoteAddress':
         // 存储远程消息，退出时候用
@@ -289,6 +306,19 @@ class Blockchain {
       return false
     }
     return true
+  }
+
+  replaceChain(newChain) {
+    // 先不校验交易
+    if (newChain.length === 1) {
+      // 创世区块链
+      return
+    }
+    if (this.isValidChain(newChain) && newChain.length > this.blockchain.length) {
+      this.blockchain = JSON.parse(JSON.stringify(newChain))
+    } else {
+      console.log('不合法链')
+    }
   }
 }
 // const bc = new Blockchain()
