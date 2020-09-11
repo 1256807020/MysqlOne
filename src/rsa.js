@@ -31,16 +31,16 @@ function generateKeys() {
 const keys = generateKeys()
 console.log(keys)
 // 签名
-function sign({ from, to, amount }) {
-  const bufferMsg = Buffer.from(`${from}-${to}-${amount}`)
+function sign({ from, to, amount, timestamp }) {
+  const bufferMsg = Buffer.from(`${timestamp}-${amount}-${from}-${to}`)
   const signature = Buffer.from(keypair.sign(bufferMsg).toDER()).toString('hex')
   return signature
 }
 // 校验
-function verify({ from, to, amount, signature }, pub) {
+function verify({ from, to, amount, timestamp, signature }, pub) {
   // 校验是没有私钥的
   const keypairTemp = ec.keyFromPublic(pub, 'hex')
-  const bufferMsg = Buffer.from(`${from}-${to}-${amount}`)
+  const bufferMsg = Buffer.from(`${timestamp}-${amount}-${from}-${to}`)
   return keypairTemp.verify(bufferMsg, signature)
 }
 // const trans = { from: 'woniu', to: 'imooc', amount: 100 }
