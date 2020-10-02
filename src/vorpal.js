@@ -72,6 +72,10 @@ vorpal.command('chat <msg>', '跟别的节点hi一下').action(function (args, c
   })
   callback()
 })
+vorpal.command('pedding', '查看还没被打包的交易').action(function (args, callback) {
+  formatLog(blockchain.data)
+  callback()
+})
 // console.log('welcome')
 vorpal.exec('help')
 vorpal.delimiter('chain = >>>').show()

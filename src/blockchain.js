@@ -73,6 +73,7 @@ class Blockchain {
       this.send({
         type: 'newpeer'
       }, this.seed.port, this.seed.address)
+      // 把种子节点加入到本地节点
       this.peers.push(this.seed)
     }
   }
@@ -117,7 +118,7 @@ class Blockchain {
           type: 'blockchain',
           data: JSON.stringify({
             blockchain: this.blockchain,
-            // trans: this.data
+            trans: this.data
           })
         }, remote.port, remote.address)
         this.peers.push(remote)
@@ -126,9 +127,15 @@ class Blockchain {
       case 'blockchain':
         // 同步本地链
         this.allData = JSON.parse(action.data)
+        console.log('this.allData', this.allData)
         this.newChain = this.allData.blockchain
-        console.log(this.allData)
+        // eslint-disable-next-line
+        const newTrans = this.allData.trans
+        // console.log(this.allData)
+        // if (this.newChain.length > 1) {
         this.replaceChain(this.newChain)
+        this.replaceTrans(newTrans)
+        // }
         break
       case 'remoteAddress':
         // 存储远程消息，退出时候用
@@ -153,7 +160,7 @@ class Blockchain {
       case 'trans':
         // 网络上收到了交易请求
         // 是否有重复交易
-        if (!this.data.find(v => this.isEqualObj)) {
+        if (!this.data.find(v => this.isEqualObj(v, action.data))) {
           console.log('有新的交易，请注意查收！')
           this.addTrans(action.data)
           this.boardcast({
@@ -220,6 +227,13 @@ class Blockchain {
   }
 
   transfer(from, to, amount) {
+    // 获取当前时间戳
+    const timestamp = new Date().getTime()
+    // 签名,注意key值只能叫signature
+    const signature = rsa.sign({ from, to, amount, timestamp })
+    console.log(signature)
+    // 签名后的对象和签名数据
+    const sigTrans = { from, to, amount, timestamp, signature }
     // 签名校验(后面补充)
     if (from !== '0') {
       // 交易非挖矿
@@ -228,16 +242,11 @@ class Blockchain {
         console.log('not enough blance', from, blance, amount)
         return
       }
+      this.boardcast({
+        type: 'trans',
+        data: sigTrans
+      })
     }
-    const timestamp = new Date().getTime()
-    // 签名
-    const sig = rsa.sign({ from, to, amount, timestamp })
-    // 签名后的对象和签名数据
-    const sigTrans = { from, to, amount, timestamp, sig }
-    this.boardcast({
-      type: 'trans',
-      data: sigTrans
-    })
     this.data.push(sigTrans)
     return sigTrans
   }
@@ -276,6 +285,12 @@ class Blockchain {
     }
   }
 
+  replaceTrans(trans) {
+    if (trans.every(v => this.isValidTransfer(v))) {
+      this.data = trans
+    }
+  }
+
   // 挖矿 就是打包交易
   mine(address) {
     // 校验所有交易的合法性
@@ -294,7 +309,8 @@ class Blockchain {
     // 挖矿结束，矿工奖励100
     this.transfer('0', address, 100)
     const newBlock = this.generateNewBlock()
-    if (this.isValidBlock(newBlock) && this.isValidChain(this.blockchain)) {
+    console.log(newBlock)
+    if (this.isValidBlock(newBlock) && this.isValidChain()) {
       this.blockchain.push(newBlock)
       this.data = []
       console.log('[消息]：挖矿成功！')

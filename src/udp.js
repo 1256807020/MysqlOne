@@ -14,7 +14,7 @@ server.on('listening', () => {
 })
 
 server.on('message', (msg, rinfo) => {
-	console.log(msg.toString())
+  console.log(msg.toString())
   console.log(`receive message from ${rinfo.address}:${rinfo.port}`)
   server.send('exit', rinfo.port, rinfo.address)
 })
