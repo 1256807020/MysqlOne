@@ -74,12 +74,59 @@ remix  http://remix.hubwiz.com/#optimize=false&version=soljson-v0.5.1+commit.c8a
 https://metamask.io/
 ```
 ```
+https://metamask.io/
 密码：wsx...rfv
 私密备份密语：report guess crouch subject veteran hidden display roof negative pepper enable naive
 ```
-
-
-
+```
+私有链
+https://www.trufflesuite.com/ganache
+需要12.13.4以上版本
+truffle version命令后
+Truffle v5.1.47 (core: 5.1.47)
+Solidity v0.5.16 (solc-js)
+Node v12.18.4
+Web3.js v1.2.1
+- npm install -g ethereumjs-testrpc
+testrpc
+- npm install -g ganache-cli
+ganache-cli 是命令行类型的，ganache 是图形化的，下载比较慢
+ganache 开发用的
+https://github.com/trufflesuite/ganache/releases  下载安装版本
+```
+```
+solidity数据类型：
+1.布尔值 true false  && || !
+2.整型 uint 无符号整型，只能表示正数，init 和js中的number类似
++ - * / < > <=
+3.地址  以太坊的地址
+0x+40位
+3.1  合约里面的全局变量  msg.sender  部署合约的地址（合约的拥有者）
+3.2  地址有很多的方法，blance 查看余额，transfer 转账
+4.字符串
+5.数组
+unit [5] arr = [1,2,3,4,5]
+for(unit i=0;i<arr.length;i++){}
+6.map  所谓的map和js的对象是一个东西
+{
+  name:'woniu',
+  age:18
+}
+7.结构体 struct
+8.枚举 enum
+```
+#### 以太坊开发条件truffle
+```
+npm list -g --depth 0
+npm i truffle -g
+truffle 是部署用的
+https://www.trufflesuite.com/
+tutorials 教程中找
+https://truffle.tryblockchain.org/  中文介绍
+```
+```
+ipfs
+```
 
 
 
